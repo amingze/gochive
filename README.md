@@ -1,2 +1,2 @@
-# gochive
-archive application
+# Go archive
+a simple archive application
