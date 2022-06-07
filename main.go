@@ -1,15 +1,22 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net/http"
 )
 
-const servePort = 6000
+var (
+	httpPort = 6000
+)
+
+func init() {
+	flag.IntVar(&httpPort, "port", 6000, "p")
+}
 
 func main() {
-	fmt.Println("service run in:", servePort)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", servePort), nil)
+	fmt.Println("service run in:", httpPort)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", httpPort), nil)
 	if err != nil {
 		fmt.Println(err)
 	}
