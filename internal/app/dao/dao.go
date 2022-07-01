@@ -2,13 +2,16 @@ package dao
 
 import (
 	"github.com/amingze/gochive/internal/app/model"
+	"github.com/amingze/gochive/internal/pkg/gormutil"
 	"github.com/amingze/gochive/internal/pkg/utils/fileutil"
-	"github.com/amingze/gochive/internal/pkg/utils/gormutil"
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
 var gdb *gorm.DB
+
+func Ready() bool {
+	return gdb != nil
+}
 
 func Init(driver, dsn string) error {
 	conf := gormutil.Config{
@@ -16,9 +19,7 @@ func Init(driver, dsn string) error {
 		DSN:    dsn,
 	}
 	if driver == "" || driver == "sqlite" || driver == "sqlite3" {
-		if err := fileutil.MkFileAll(dsn); err != nil {
-			logrus.Error(err)
-		}
+		fileutil.MkFileAll(dsn)
 	}
 	db, err := gormutil.New(conf)
 	if err != nil {
@@ -32,4 +33,8 @@ func Init(driver, dsn string) error {
 	}
 
 	return nil
+}
+
+func Transaction(fc func(tx *gorm.DB) error) error {
+	return gdb.Transaction(fc)
 }

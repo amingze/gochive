@@ -3,26 +3,33 @@ package ginutil
 import (
 	"github.com/amingze/gochive/internal/pkg/utils/httputil"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
-	swaggerFiles "github.com/swaggo/files"
+	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"log"
 	"net/http"
-	"path"
-	"strings"
 )
 
 type Resource interface {
 	Register(router *gin.RouterGroup)
 }
 
-func SetupSwagger(engine *gin.Engine) {
-	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-}
-
 func SetupResource(rg *gin.RouterGroup, resources ...Resource) {
 	for _, resource := range resources {
 		resource.Register(rg)
 	}
+}
+
+func SetupPing(e *gin.Engine) {
+	pingHandler := func(c *gin.Context) {
+		c.String(http.StatusOK, "pong")
+	}
+
+	e.HEAD("/ping", pingHandler)
+	e.GET("/ping", pingHandler)
+}
+
+func SetupSwagger(engine *gin.Engine) {
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 }
 
 func Startup(e *gin.Engine, addr string) {
@@ -32,26 +39,11 @@ func Startup(e *gin.Engine, addr string) {
 	}
 
 	go func() {
-		logrus.Info("[rest server listen at ", srv.Addr, "]")
+		log.Printf("[rest server listen at %s]", srv.Addr)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.Fatalln(err)
+			log.Fatalln(err)
 		}
 	}()
 
 	httputil.SetupGracefulStop(srv)
-}
-
-func SetupEmbedAssets(rg *gin.RouterGroup, fs http.FileSystem, relativePaths ...string) {
-	handler := func(c *gin.Context) {
-		c.FileFromFS(strings.TrimPrefix(c.Request.URL.Path, rg.BasePath()), fs)
-	}
-
-	for _, relativePath := range relativePaths {
-		urlPattern := relativePath
-		if urlPattern != "/" {
-			urlPattern = path.Join(relativePath, "/*filepath")
-		}
-		rg.GET(urlPattern, handler)
-		rg.HEAD(urlPattern, handler)
-	}
 }

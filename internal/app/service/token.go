@@ -1,0 +1,57 @@
+package service
+
+import (
+	"fmt"
+	"github.com/amingze/gochive/internal/pkg/utils/jwtutil"
+	"strconv"
+	"time"
+
+	"github.com/golang-jwt/jwt"
+)
+
+type Token struct {
+}
+
+func NewToken() *Token {
+	jwtutil.Init("123")
+	return &Token{}
+}
+
+func (s *Token) Create(uid string, ttl int, roles ...string) (string, error) {
+	return jwtutil.Issue(NewRoleClaims(uid, ttl, roles))
+}
+
+func (s *Token) Verify(tokenStr string) (*RoleClaims, error) {
+	token, err := jwtutil.Verify(tokenStr, &RoleClaims{})
+	if err != nil {
+		return nil, fmt.Errorf("token valid failed: %s", err)
+	}
+
+	return token.Claims.(*RoleClaims), nil
+}
+
+type RoleClaims struct {
+	jwt.StandardClaims
+
+	Roles []string `json:"roles"`
+}
+
+func NewRoleClaims(subject string, ttl int, roles []string) *RoleClaims {
+	timeNow := time.Now()
+	return &RoleClaims{
+		StandardClaims: jwt.StandardClaims{
+			Issuer:    "chive",
+			Audience:  "chiveUsers",
+			ExpiresAt: timeNow.Add(time.Duration(ttl) * time.Second).Unix(),
+			IssuedAt:  timeNow.Unix(),
+			NotBefore: timeNow.Unix(),
+			Subject:   subject,
+		},
+		Roles: roles,
+	}
+}
+
+func (rc *RoleClaims) Uid() int64 {
+	uid, _ := strconv.ParseInt(rc.Subject, 10, 64)
+	return uid
+}

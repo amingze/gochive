@@ -13,9 +13,10 @@ import (
 	"github.com/spf13/viper"
 )
 
+// serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "web",
-	Short: "run http service.",
+	Short: "A cloud disk base on the cloud service.",
 	Run: func(cmd *cobra.Command, args []string) {
 		serverRun()
 	},
@@ -27,19 +28,14 @@ func init() {
 	serverCmd.Flags().IntP("port", "p", 8222, "server port")
 	logrus.Debug("传入端口", viper.GetInt("port"))
 
-	if err := viper.BindPFlags(serverCmd.Flags()); err != nil {
-		logrus.Error(err)
-	}
+	viper.BindPFlags(serverCmd.Flags())
 }
 
 func serverRun() {
 	gin.SetMode(gin.DebugMode)
 	if viper.IsSet("installed") {
 		logrus.Debug("应用已安装，加载数据库", viper.GetString("database.driver"), viper.GetString("database.dsn"))
-		err := dao.Init(viper.GetString("database.driver"), viper.GetString("database.dsn"))
-		if err != nil {
-			logrus.Error(err)
-		}
+		dao.Init(viper.GetString("database.driver"), viper.GetString("database.dsn"))
 	}
 
 	ge := gin.Default()

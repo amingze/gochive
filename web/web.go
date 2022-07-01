@@ -25,9 +25,9 @@ func NewFS() *FileSystem {
 }
 
 func (fs FileSystem) Open(name string) (http.File, error) {
-	f, err := fs.efs.Open(path.Join("front/dist", name))
+	f, err := fs.efs.Open(path.Join("app/dist", name))
 	if os.IsNotExist(err) {
-		return fs.efs.Open("front/dist/index.html") // SPA应用需要始终加载index.html
+		return fs.efs.Open("app/dist/index.html")
 	}
 	return f, err
 }

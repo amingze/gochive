@@ -3,6 +3,8 @@ package v1
 import (
 	"github.com/amingze/gochive/internal/pkg/utils/ginutil"
 	"github.com/gin-gonic/gin"
+
+	_ "github.com/amingze/gochive/internal/docs"
 )
 
 // @title gochive
@@ -18,6 +20,7 @@ import (
 
 // @contact.name API Support
 // @contact.url https://github.com/amingze/gochive
+// @contact.email
 
 // @license.name Apache 2.0
 // @license.url https://github.com/amingze/gochive/blob/master/LICENSE
@@ -26,5 +29,12 @@ func SetupRoutes(ge *gin.Engine) {
 	ginutil.SetupSwagger(ge)
 
 	apiRouter := ge.Group("/api")
-	ginutil.SetupResource(apiRouter)
+	ginutil.SetupResource(apiRouter,
+		NewOptionResource(),
+		NewUserResource(),
+		NewAuthorizeResource(),
+		NewTokenResource(),
+		NewFileResource(),
+		NewMemoResource(),
+	)
 }

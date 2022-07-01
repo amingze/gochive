@@ -1,0 +1,56 @@
+# 默认注册用户才能访问
+- id: 0
+  host: "*"
+  path: "**"
+  method: "*"
+  authorized_roles:
+    - "admin"
+    - "member"
+
+# 站点信息允许匿名访问
+- id: 10
+  host: "*"
+  path: "/api/system/options/core.site"
+  method: "GET"
+  allow_anyone: true
+
+# 登录接口允许任何人访问
+- id: 11
+  host: "*"
+  path: "/api/tokens"
+  method: "{POST,DELETE}"
+  allow_anyone: true
+# 注册接口允许任何人访问
+- id: 12
+  host: "*"
+  path: "/api/users"
+  method: "{POST,PATCH}"
+  allow_anyone: true
+
+- id: 103
+  host: "*"
+  path: "/api/users"
+  method: "GET"
+  authorized_roles:
+    - "admin"
+
+- id: 104
+  host: "*"
+  path: "/api/users/**"
+  method: "{PUT,DELETE}"
+  authorized_roles:
+    - "admin"
+
+- id: 105
+  host: "*"
+  path: "/api/system/options/*"
+  method: "PUT"
+  authorized_roles:
+    - "admin"
+
+- id: 106
+  host: "*"
+  path: "/api/system/options/core.email"
+  method: "GET"
+  authorized_roles:
+    - "admin"

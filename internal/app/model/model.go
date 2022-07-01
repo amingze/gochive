@@ -6,7 +6,16 @@ import (
 )
 
 func Tables() []interface{} {
-	return []interface{}{}
+	return []interface{}{
+		new(Option),
+		new(User),
+		new(Authorize),
+		new(UserProfile),
+		new(File),
+		new(Matter),
+		new(Memo),
+		new(Tag),
+	}
 }
 
 type Model struct {

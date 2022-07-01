@@ -30,7 +30,6 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is "+config.DefaultConfigFile+")")
 }
 
-// initConfig
 func initConfig() {
 	logrus.Debug("加载配置文件")
 	if cfgFile != "" {

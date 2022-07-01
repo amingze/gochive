@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//var defaultDB *gorm.DB
+var defaultDB *gorm.DB
 
 type Config struct {
 	Driver string `yaml:"driver"`

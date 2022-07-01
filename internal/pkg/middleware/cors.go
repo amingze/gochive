@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Cors() gin.HandlerFunc {
@@ -18,16 +19,16 @@ func Cors() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "authorization,Authorization,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+
 		if strings.HasSuffix(c.Request.URL.String(), ".js") {
 			c.Header("Content-Type", "application/javascript")
 		}
-
+		// 放行所有OPTIONS方法，因为有的模板是要请求两次的
 		if c.Request.Method == http.MethodOptions {
 			c.AbortWithStatus(200)
 		} else {
 			c.Next()
 		}
-
 		c.Next()
 	}
 }
