@@ -38,38 +38,39 @@ func (rs *FileResource) Register(router *gin.RouterGroup) {
 // @Accept json
 // @Produce json
 // @Security OAuth2Application[matter, admin]
-// @Param body body bind.BodyMatter true "参数"
+// @Param body body bind.BodyFastFile true "参数"
 // @Success 200 {object} httputil.JSONResponse
 // @Failure 400 {object} httputil.JSONResponse
 // @Failure 500 {object} httputil.JSONResponse
 // @Router /matters [post]
 func (rs *FileResource) fastload(c *gin.Context) {
-	p := new(bind.BodyMatter)
+	p := new(bind.BodyFastFile)
 	if err := c.ShouldBindJSON(p); err != nil {
 		ginutil.JSONBadRequest(c, err)
 		return
 	}
 	uid := authed.UidGet(c)
-	matter := bind.Body2Matter(p, uid)
+	matter := model.NewMatter(uid, p.Name)
 	if file, exist := rs.sFile.Exist(p.Signature, p.Size); exist {
 		matter.Fid = file.ID
+		matter.IsFast = true
 		err := rs.sMatter.Create(matter)
 		if err != nil {
 			ginutil.JSONServerError(c, err)
 			return
 		}
 	}
+
 	ginutil.JSONData(c, matter)
 }
 
 // upload godoc
 // @Tags Matters
-// @Summary 创建文件
-// @Description 创建文件,用于快速上传
+// @Summary 上传文件
+// @Description 上传文件
 // @Accept json
 // @Produce json
 // @Security OAuth2Application[matter, admin]
-// @Param query query bind.BodyMatter true "参数"
 // @Param file formData file true "文件"
 // @Success 200 {object} httputil.JSONResponse
 // @Failure 400 {object} httputil.JSONResponse

@@ -23,6 +23,11 @@ type BodyMatter struct {
 	Size      int64  `json:"size"`
 	Signature string `json:"signature"`
 }
+type BodyFastFile struct {
+	Name      string `json:"name"`
+	Size      int64  `json:"size"`
+	Signature string `json:"signature"`
+}
 
 func Body2Matter(m *BodyMatter, uid int64) (matter *model.Matter) {
 	matter = model.NewMatter(uid, m.Name)

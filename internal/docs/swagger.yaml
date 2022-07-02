@@ -1,21 +1,13 @@
 basePath: /api/
 definitions:
-  bind.BodyMatter:
+  bind.BodyFastFile:
     properties:
-      dir:
-        type: string
-      fid:
-        type: integer
-      is_dir:
-        type: boolean
       name:
         type: string
       signature:
         type: string
       size:
         type: integer
-      type:
-        type: string
     type: object
   bind.BodyMemoCreation:
     properties:
@@ -262,7 +254,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/bind.BodyMatter'
+          $ref: '#/definitions/bind.BodyFastFile'
       produces:
       - application/json
       responses:
@@ -289,29 +281,8 @@ paths:
     post:
       consumes:
       - application/json
-      description: 创建文件,用于快速上传
+      description: 上传文件
       parameters:
-      - in: query
-        name: dir
-        type: string
-      - in: query
-        name: fid
-        type: integer
-      - in: query
-        name: is_dir
-        type: boolean
-      - in: query
-        name: name
-        type: string
-      - in: query
-        name: signature
-        type: string
-      - in: query
-        name: size
-        type: integer
-      - in: query
-        name: type
-        type: string
       - description: 文件
         in: formData
         name: file
@@ -336,14 +307,14 @@ paths:
       - OAuth2Application:
         - matter
         - admin
-      summary: 创建文件
+      summary: 上传文件
       tags:
       - Matters
   /memo:
     get:
       consumes:
       - application/json
-      description: 查找Memo
+      description: 备份
       parameters:
       - in: query
         name: content
@@ -383,7 +354,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/httputil.JSONResponse'
-      summary: 查找Memo
+      summary: 备份
       tags:
       - Memo
     post:

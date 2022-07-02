@@ -25,8 +25,10 @@ func (ms *MemoResource) Register(router *gin.RouterGroup) {
 	router.GET("/memo/list", ms.findAll)
 	router.GET("/memo/:id", ms.findOne)
 	router.GET("/memo", ms.search)
+	router.GET("/memo/backup", ms.backupStatus)
 	router.POST("/memo/backup", ms.backup)
-	router.POST("/memo/backed", ms.backed)
+	router.DELETE("/memo/backup", ms.backupRemove)
+
 	router.POST("/memo", ms.create)
 	router.PUT("/memo/:id", ms.update)
 	router.DELETE("/memo/:id", ms.delete)
@@ -209,13 +211,39 @@ func (ms *MemoResource) search(context *gin.Context) {
 	ginutil.JSONList(context, &list, total)
 }
 
-func (ms *MemoResource) backup(context *gin.Context) {
+// backupStatus godoc
+// @Tags Memo
+// @Summary 备份状态
+// @Description 参考当前的备份状态
+// @Accept json
+// @Produce json
+// @Param query query  bind.BodyMemoSearch true "参数"
+// @Success 200 {object} httputil.JSONResponse{data=gin.H{list=[]model.Memo,total=int64}}
+// @Failure 400 {object} httputil.JSONResponse
+// @Failure 500 {object} httputil.JSONResponse
+// @Router /memo [get]
+func (ms *MemoResource) backupStatus(context *gin.Context) {
 	uid := authed.UidGet(context)
 	ms.sMemo.FindAll(uid, 0, 0)
 }
 
-func (ms *MemoResource) backed(context *gin.Context) {
+// backupStatus godoc
+// @Tags Memo
+// @Summary 备份
+// @Description 备份
+// @Accept json
+// @Produce json
+// @Param query query  bind.BodyMemoSearch true "参数"
+// @Success 200 {object} httputil.JSONResponse{data=gin.H{list=[]model.Memo,total=int64}}
+// @Failure 400 {object} httputil.JSONResponse
+// @Failure 500 {object} httputil.JSONResponse
+// @Router /memo [get]
+func (ms *MemoResource) backup(context *gin.Context) {
 	uid := authed.UidGet(context)
 	ms.sMemo.FindAll(uid, 0, 0)
+
+}
+
+func (ms *MemoResource) backupRemove(context *gin.Context) {
 
 }

@@ -36,6 +36,7 @@ type Matter struct {
 	URL        string     `json:"url" gorm:"-"`
 	UploadedAt *time.Time `json:"uploaded"`
 	TrashedBy  string     `json:"-" gorm:"size:16;not null"`
+	IsFast     bool       `json:"is_fast" gorm:"-"`
 }
 
 func NewMatter(uid int64, name string) *Matter {

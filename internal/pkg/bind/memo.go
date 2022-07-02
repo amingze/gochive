@@ -4,7 +4,8 @@ type QueryMemo struct {
 	QueryPage2
 }
 type BodyMemoCreation struct {
-	Content string `json:"content"`
+	Content string   `json:"content"`
+	Tags    []string `json:"tags"`
 }
 type BodyMemoSearch struct {
 	QueryPage2

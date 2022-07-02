@@ -51,7 +51,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/bind.BodyMatter"
+                            "$ref": "#/definitions/bind.BodyFastFile"
                         }
                     }
                 ],
@@ -87,7 +87,7 @@ const docTemplate = `{
                         ]
                     }
                 ],
-                "description": "创建文件,用于快速上传",
+                "description": "上传文件",
                 "consumes": [
                     "application/json"
                 ],
@@ -97,43 +97,8 @@ const docTemplate = `{
                 "tags": [
                     "Matters"
                 ],
-                "summary": "创建文件",
+                "summary": "上传文件",
                 "parameters": [
-                    {
-                        "type": "string",
-                        "name": "dir",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "fid",
-                        "in": "query"
-                    },
-                    {
-                        "type": "boolean",
-                        "name": "is_dir",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "name",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "signature",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "name": "size",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "name": "type",
-                        "in": "query"
-                    },
                     {
                         "type": "file",
                         "description": "文件",
@@ -166,7 +131,7 @@ const docTemplate = `{
         },
         "/memo": {
             "get": {
-                "description": "查找Memo",
+                "description": "备份",
                 "consumes": [
                     "application/json"
                 ],
@@ -176,7 +141,7 @@ const docTemplate = `{
                 "tags": [
                     "Memo"
                 ],
-                "summary": "查找Memo",
+                "summary": "备份",
                 "parameters": [
                     {
                         "type": "string",
@@ -1650,18 +1615,9 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "bind.BodyMatter": {
+        "bind.BodyFastFile": {
             "type": "object",
             "properties": {
-                "dir": {
-                    "type": "string"
-                },
-                "fid": {
-                    "type": "integer"
-                },
-                "is_dir": {
-                    "type": "boolean"
-                },
                 "name": {
                     "type": "string"
                 },
@@ -1670,9 +1626,6 @@ const docTemplate = `{
                 },
                 "size": {
                     "type": "integer"
-                },
-                "type": {
-                    "type": "string"
                 }
             }
         },
